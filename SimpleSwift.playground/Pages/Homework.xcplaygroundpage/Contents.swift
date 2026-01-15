@@ -27,11 +27,78 @@ print("Welcome to the UW Calculator Playground")
 //: For this latter set of operations, it is safe to assume that `["count"]` (with no additional arguments) is 0, `["avg"]` is also 0, and `["fact"]` is 0. `["1", "fact"]` should return 1, and `["0", "fact"]` should also return 1. (Yes, 0-factorial is 1. True story.)
 //: 
 func calculate(_ args: [String]) -> Int {
-    return -1
+    guard let lastItem = args.last else {return 0};
+    
+    if ["count","avg","fact"].contains(lastItem) {
+        let numbers = args.dropLast().compactMap {Int($0)};
+        
+        switch lastItem {
+        case "count":
+            return args.count - 1;
+        case "avg":
+            if !numbers.isEmpty {
+                var sum = 0;
+                for num in numbers {
+                    sum += num;
+                }
+                return sum/numbers.count;
+            } else {return 0;}
+        case "fact":
+            if args.count == 1 {return 0};
+            guard let n = numbers.first else {return 0};
+            if n < 0 {
+                return 0;
+            } else if (n == 0){
+                return 1;
+            } else {
+                var sum = 1;
+                for i in 1...n {
+                    sum = sum * i;
+                }
+                return sum;
+            }
+        default:
+            return 0;
+        }
+    } else if args.count == 3 {
+        let left = Int(args[0]) ?? 0;
+        let operation = args[1];
+        let right = Int(args[2]) ?? 0;
+        
+        switch operation {
+        case "+":
+            return left + right;
+        case "-":
+            return left - right;
+        case "*":
+            return left * right;
+        case "/":
+            if right == 0 {return 0}
+            else {
+                return left / right;
+            }
+        case "%":
+            if right == 0 {return 0}
+            else {
+                return left % right;
+            }
+        default:
+            return 0;
+        }
+    }
+    
+    return -1;
 }
 
 func calculate(_ arg: String) -> Int {
-    return -1
+    let arr = arg.split(separator: " ");
+    var strArr: [String] = [];
+    
+    for sub in arr {
+        let conString = String(sub);
+        strArr.append(conString);
+    }
+    return calculate(strArr);
 }
 
 //: Below this are the test expressions/calls to verify if your code is correct.
